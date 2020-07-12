@@ -34,7 +34,8 @@ module.exports = (env, argv) => {
       compress: true,
       port: 9000,
       watchContentBase: true,
-      progress: false,
+      progress: true,
+      stats: 'errors-only',
     },
     plugins: [
       isProduction ? new CleanWebpackPlugin({
