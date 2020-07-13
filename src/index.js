@@ -32,6 +32,26 @@ function getFingerprint() {
   })
 }
 
+function cssPath(el) {
+  if (!(el instanceof Element)) return
+  const path = []
+  while (el.nodeType === Node.ELEMENT_NODE) {
+    let selector = el.nodeName.toLowerCase()
+    if (el.id) {
+      selector += '#' + el.id
+    } else {
+      let sib = el
+      let nth = 1
+      while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++) {
+        selector += ':nth-child(' + nth + ')'
+      }
+    }
+    path.unshift(selector)
+    el = el.parentNode
+  }
+  return path.join(' > ')
+}
+
 function sender() {
   if (!cash.activities.length) {
     return
@@ -82,7 +102,7 @@ async function start() {
     }
 
     cash.activities.push(data)
-    console.log(data)
+    console.log(event)
   }))
 }
 
