@@ -68,13 +68,17 @@ async function start() {
 
   document.addEventListener('click', ((event) => {
     const data = {
-      clientX: event.clientX,
-      clientY: event.clientY,
-      screenWidth: window.screen.width,
-      rotation: window.screen.orientation.type,
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
-      targetElemTag: event.target.nodeName,
+      click_x: event.clientX,
+      click_y: event.clientY,
+      screen_width: window.screen.width,
+      orientation: window.screen.orientation.type,
+      scroll_x: window.scrollX,
+      scroll_y: window.scrollY,
+      elem_tag: event.target.nodeName,
+      elem_selector: '',
+      page_uri: window.location.href,
+      elem_x: 0,
+      elem_y: 0,
     }
 
     cash.activities.push(data)
