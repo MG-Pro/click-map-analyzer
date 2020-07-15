@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
+  const isDocs = process.env.NODE_ENV === 'docs'
 
   return {
     entry: [
@@ -12,7 +13,7 @@ module.exports = (env, argv) => {
     output: {
       path: __dirname,
       publicPath: '/',
-      filename: './dist/cm.js',
+      filename: isDocs ? './docs/cm.js' : './dist/cm.js',
     },
     module: {
       rules: [

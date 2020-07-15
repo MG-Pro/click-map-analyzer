@@ -3,6 +3,7 @@ import Fingerprint2 from 'fingerprintjs2'
 const config = {
   sendInterval: 10000,
   apiUrl: 'http://localhost:3000/api/activities/add',
+  fingerprint: {fonts: {extendedJsFonts: true}},
 }
 
 const cash = {
@@ -10,21 +11,17 @@ const cash = {
   activities: [],
 }
 
-const fpConfig = {
-  fonts: {extendedJsFonts: true},
-}
-
 function getFingerprint() {
   return new Promise((done) => {
     if (window.requestIdleCallback) {
       requestIdleCallback(() => {
-        Fingerprint2.getV18(fpConfig, (hash, components) => {
+        Fingerprint2.getV18(config.fingerprint, (hash, components) => {
           done({hash, components})
         })
       })
     } else {
       setTimeout(() => {
-        Fingerprint2.getV18(fpConfig, (hash, components) => {
+        Fingerprint2.getV18(config.fingerprint, (hash, components) => {
           done({hash, components})
         })
       }, 500)
@@ -32,24 +29,17 @@ function getFingerprint() {
   })
 }
 
-function cssPath(el) {
-  if (!(el instanceof Element)) return
+const getCssSelector = (el) => {
   const path = []
-  while (el.nodeType === Node.ELEMENT_NODE) {
-    let selector = el.nodeName.toLowerCase()
-    if (el.id) {
-      selector += '#' + el.id
-    } else {
-      let sib = el
-      let nth = 1
-      while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++) {
-        selector += ':nth-child(' + nth + ')'
-      }
-    }
+  let parent = el.parentNode
+
+  while (parent && el !== document.documentElement) {
+    const selector = el.id ? '#' + el.id : `${el.tagName}:nth-child(${[].indexOf.call(parent.children, el) + 1})`
     path.unshift(selector)
-    el = el.parentNode
+    el = parent
+    parent = el.parentNode
   }
-  return path.join(' > ')
+  return `${path.join('>')}`.toLowerCase()
 }
 
 function sender() {
@@ -59,14 +49,12 @@ function sender() {
 
   fetch(config.apiUrl, {
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(cash),
   })
     .catch((err) => console.log(err))
     .finally(() => {
-      console.dir('send cash', cash)
+      console.dir('cash sent', cash)
       cash.activities = []
     })
 }
@@ -77,16 +65,16 @@ function startSender() {
 
 async function start() {
   const fingerprint = await getFingerprint()
-  console.log(fingerprint)
 
   if (!fingerprint || !fingerprint.hash) {
     return
   }
   cash.fingerprint = fingerprint.hash
 
-  startSender()
-
   document.addEventListener('click', ((event) => {
+    const {left, top, width, height} = event.target.getBoundingClientRect()
+    const selector = getCssSelector(event.target)
+
     const data = {
       click_x: event.clientX,
       click_y: event.clientY,
@@ -95,15 +83,21 @@ async function start() {
       scroll_x: window.scrollX,
       scroll_y: window.scrollY,
       elem_tag: event.target.nodeName,
-      elem_selector: '',
+      elem_selector: selector,
       page_uri: window.location.href,
-      elem_x: 0,
-      elem_y: 0,
+      elem_x: left + window.scrollX,
+      elem_y: top + window.scrollY,
+      timestamp: Date.now(),
+      elem_width: width,
+      elem_height: height,
+
     }
 
     cash.activities.push(data)
-    console.log(event)
+    console.log(data)
   }))
+
+  startSender()
 }
 
 document.addEventListener('DOMContentLoaded', start)
