@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
     },
     devtool: isProduction ? false : 'cheap-inline-module-source-map',
     optimization: {
-      minimize: false,
+      minimize: true,
     },
     devServer: {
       contentBase: path.join(__dirname, 'dist'),
