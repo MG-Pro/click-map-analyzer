@@ -54,6 +54,7 @@ function sender() {
   })
     .catch((err) => console.log(err))
     .finally(() => {
+      console.log(JSON.stringify(cash))
       cash.activities = []
     })
 }
