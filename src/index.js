@@ -54,7 +54,6 @@ function sender() {
   })
     .catch((err) => console.log(err))
     .finally(() => {
-      console.dir('cash sent', cash)
       cash.activities = []
     })
 }
@@ -90,11 +89,9 @@ async function start() {
       timestamp: Date.now(),
       elem_width: width,
       elem_height: height,
-
     }
 
     cash.activities.push(data)
-    console.log(data)
   }))
 
   startSender()

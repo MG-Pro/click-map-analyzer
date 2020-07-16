@@ -22,12 +22,7 @@ module.exports = {
     'object-curly-spacing': ['error', 'never'],
     'no-param-reassign': 'off',
     'import/extensions': ['error', 'always'],
-    'object-curly-newline': ['error', {
-      ObjectExpression: {multiline: true},
-      ObjectPattern: {multiline: true},
-      ImportDeclaration: {multiline: true},
-      ExportDeclaration: {multiline: true},
-    }],
+    'object-curly-newline': 'off',
     'no-trailing-spaces': ['error', {skipBlankLines: true}],
   },
 }
