@@ -14,6 +14,7 @@
         }
         body {
             font-family: sans-serif;
+            position: relative;
         }
         h1 {
             text-align: center;
@@ -43,6 +44,25 @@
             justify-content: space-between;
             align-items: center;
             background: #747070;
+        }
+        .visual-box {
+            position: relative;
+        }
+        .visual-box:after {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: rgba(168, 40, 40, 0.50);
+        }
+        .visual-box:before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: rgba(50, 34, 34, 0.5);
         }
         button {
             min-width: 50px;

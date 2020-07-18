@@ -24,5 +24,7 @@ module.exports = {
     'import/extensions': ['error', 'always'],
     'object-curly-newline': 'off',
     'no-trailing-spaces': ['error', {skipBlankLines: true}],
+    'no-return-assign': 'off',
+    'arrow-body-style': 'off',
   },
 }

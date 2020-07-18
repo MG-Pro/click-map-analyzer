@@ -1,6 +1,7 @@
 import Fingerprint2 from 'fingerprintjs2'
 
 const config = {
+  showVisual: true,
   sendInterval: 10000,
   apiUrl: 'http://localhost:3000/api/activities/add',
   fingerprint: {fonts: {extendedJsFonts: true}},
@@ -29,7 +30,7 @@ function getFingerprint() {
   })
 }
 
-const getCssSelector = (el) => {
+function getCssSelector(el) {
   const path = []
   let parent = el.parentNode
 
@@ -40,6 +41,68 @@ const getCssSelector = (el) => {
     parent = el.parentNode
   }
   return `${path.join('>')}`.toLowerCase()
+}
+
+function visualRect(x, y, dx, dy) {
+  const div = document.createElement('div')
+  div.style.position = 'absolute'
+  div.style.background = 'rgb(212 209 104 / 35%)'
+  div.classList.add('visual-box')
+  div.style.width = `${dx - x}px`
+  div.style.height = `${dy - y}px`
+  div.style.left = `${x}px`
+  div.style.top = `${y}px`
+  document.body.append(div)
+
+  setTimeout(() => {
+    // div.remove()
+  }, 5000)
+}
+
+function findNearestElems(points) {
+  const acc = []
+
+  points.forEach((row) => {
+    row.forEach((point) => {
+      const elems = document.elementsFromPoint(point.x, point.y)
+      Array.from(elems).forEach((elem) => {
+        if (elem.nodeName === 'BUTTON') {
+          const isExist = acc.includes(elem)
+          acc.push(elem)
+        }
+      })
+    })
+  })
+
+  console.log(acc)
+}
+
+function defineRectangle(x, y, width = 100, height = 50, step = 10) {
+  const startX = x - Math.round(width / 2) - step
+  let startY = y - Math.round(height / 2) - step * 3
+
+  const stepsX = Math.round(width / step) + 1
+  const stepsY = Math.round(height / step) + 1
+
+  const points = Array(stepsY).fill(null)
+    .map(() => {
+      let colX = startX
+      startY += step
+      return Array(stepsX).fill(null)
+        .map(() => {
+          return {
+            x: colX += step,
+            y: startY,
+          }
+        })
+    })
+  console.log(points)
+  if (config.showVisual) {
+    const lastRow = points[points.length - 1]
+    const lastCol = lastRow[lastRow.length - 1]
+    visualRect(points[0][0].x, points[0][0].y, lastCol.x, lastCol.y)
+  }
+  return points
 }
 
 function sender() {
@@ -72,17 +135,22 @@ async function start() {
   cash.fingerprint = fingerprint.hash
 
   document.addEventListener('click', ((event) => {
-    const {left, top, width, height} = event.target.getBoundingClientRect()
-    const selector = getCssSelector(event.target)
+    const {clientX, clientY, target} = event
+    const {left, top, width, height} = target.getBoundingClientRect()
+    const selector = getCssSelector(target)
+    const points = defineRectangle(clientX, clientY)
+    const nearestElems = findNearestElems(points)
+
+
 
     const data = {
-      click_x: event.clientX,
-      click_y: event.clientY,
+      click_x: clientX,
+      click_y: clientY,
       screen_width: window.screen.width,
       orientation: window.screen.orientation.type,
       scroll_x: window.scrollX,
       scroll_y: window.scrollY,
-      elem_tag: event.target.nodeName,
+      elem_tag: target.nodeName,
       elem_selector: selector,
       page_uri: window.location.href,
       elem_x: left + window.scrollX,
@@ -95,7 +163,7 @@ async function start() {
     cash.activities.push(data)
   }))
 
-  startSender()
+  // startSender()
 }
 
 document.addEventListener('DOMContentLoaded', start)
