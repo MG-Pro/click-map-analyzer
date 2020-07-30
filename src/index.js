@@ -1,10 +1,15 @@
 import Fingerprint2 from 'fingerprintjs2'
 
 const config = {
+  interceptClickHandlers: false,
   showVisual: true,
   sendInterval: 10000,
   apiUrl: 'http://localhost:3000/api/activities/add',
   fingerprint: {fonts: {extendedJsFonts: true}},
+  targetTags: [
+    'BUTTON',
+    'A',
+  ],
 }
 
 const cash = {
@@ -55,31 +60,34 @@ function visualRect(x, y, dx, dy) {
   document.body.append(div)
 
   setTimeout(() => {
-    // div.remove()
+    div.remove()
   }, 5000)
 }
 
-function findNearestElems(points) {
+function findNearestElems(points, scrollX, scrollY, targetElem) {
   const acc = []
 
   points.forEach((row) => {
     row.forEach((point) => {
-      const elems = document.elementsFromPoint(point.x, point.y)
-      Array.from(elems).forEach((elem) => {
-        if (elem.nodeName === 'BUTTON') {
-          const isExist = acc.includes(elem)
-          acc.push(elem)
-        }
-      })
+      Array
+        .from(document.elementsFromPoint(point.x - scrollX, point.y - scrollY))
+        .forEach((elem) => {
+          if (
+            elem !== targetElem
+            && config.targetTags.includes(elem.nodeName)
+            && !acc.includes(elem)
+          ) {
+            acc.push(elem)
+          }
+        })
     })
   })
-
-  console.log(acc)
+  return acc
 }
 
-function defineRectangle(x, y, width = 100, height = 50, step = 10) {
-  const startX = x - Math.round(width / 2) - step
-  let startY = y - Math.round(height / 2) - step * 3
+function defineRectangle(x, y, scrollX, scrollY, width = 100, height = 100, step = 10) {
+  const startX = (x - Math.round(width / 2) - step) + scrollX
+  let startY = (y - Math.round(height / 2) - step * 3) + scrollY
 
   const stepsX = Math.round(width / step) + 1
   const stepsY = Math.round(height / step) + 1
@@ -96,7 +104,6 @@ function defineRectangle(x, y, width = 100, height = 50, step = 10) {
           }
         })
     })
-  console.log(points)
   if (config.showVisual) {
     const lastRow = points[points.length - 1]
     const lastCol = lastRow[lastRow.length - 1]
@@ -126,6 +133,17 @@ function startSender() {
   setInterval(sender, config.sendInterval)
 }
 
+function getElemData(scrollX, scrollY, elem) {
+  const {left, top, width, height} = elem.getBoundingClientRect()
+  return {
+    selector: getCssSelector(elem),
+    elemX: left + scrollX,
+    elemY: top + scrollY,
+    width,
+    height,
+  }
+}
+
 async function start() {
   const fingerprint = await getFingerprint()
 
@@ -135,31 +153,41 @@ async function start() {
   cash.fingerprint = fingerprint.hash
 
   document.addEventListener('click', ((event) => {
+    const {scrollX, scrollY, screen, location} = window
     const {clientX, clientY, target} = event
-    const {left, top, width, height} = target.getBoundingClientRect()
-    const selector = getCssSelector(target)
-    const points = defineRectangle(clientX, clientY)
-    const nearestElems = findNearestElems(points)
 
+    const getElemDataXY = (elem) => {
+      return getElemData(scrollX, scrollY, elem)
+    }
 
+    const {selector, elemX, elemY, width, height} = getElemDataXY(target)
+    const points = defineRectangle(clientX, clientY, scrollX, scrollY)
+    const nearestElems = findNearestElems(points, scrollX, scrollY, target)
+
+    if (!nearestElems.length) {
+      return
+    }
+
+    const nearestElemsData = nearestElems.map((elem) => getElemDataXY(elem))
 
     const data = {
       click_x: clientX,
       click_y: clientY,
-      screen_width: window.screen.width,
-      orientation: window.screen.orientation.type,
-      scroll_x: window.scrollX,
-      scroll_y: window.scrollY,
+      screen_width: screen.width,
+      orientation: screen.orientation.type,
+      scroll_x: scrollX,
+      scroll_y: scrollY,
       elem_tag: target.nodeName,
       elem_selector: selector,
-      page_uri: window.location.href,
-      elem_x: left + window.scrollX,
-      elem_y: top + window.scrollY,
+      page_uri: location.href,
+      elem_x: elemX,
+      elem_y: elemY,
       timestamp: Date.now(),
       elem_width: width,
       elem_height: height,
+      nearestElemsData,
     }
-
+    console.log(data)
     cash.activities.push(data)
   }))
 

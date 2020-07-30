@@ -64,7 +64,7 @@
             height: 50%;
             background: rgba(50, 34, 34, 0.5);
         }
-        button {
+        button, a {
             min-width: 50px;
             background: #080c39;
             color: #ffffff;
@@ -74,12 +74,23 @@
             font-size: 16px;
             padding: 10px;
             outline: none;
+            text-decoration: none;
         }
 
         button:hover {
             opacity: 0.7;
         }
     </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('a')
+        for (const link of links) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault()
+          })
+        }
+      })
+    </script>
 </head>
 <body>
 <div class="container">
@@ -89,77 +100,84 @@
             <div class="box__item-content"></div>
             <div class="box__item-footer" id="item-footer1">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item" id="box2">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
             </div>
         </div>
         <div class="box__item">
             <div class="box__item-content"></div>
             <div class="box__item-footer">
                 <button>Hello</button>
-                <button>Bye</button>
+                <a href="">Bye</a>
+            </div>
+        </div>
+        <div class="box__item">
+            <div class="box__item-content"></div>
+            <div class="box__item-footer">
+                <button>Hello</button>
+                <a href="">Bye</a>
             </div>
         </div>
     </div>
