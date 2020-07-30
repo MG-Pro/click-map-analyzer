@@ -1,6 +1,7 @@
 const path = require('path')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const {version} = require('./package.json')
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
@@ -13,7 +14,7 @@ module.exports = (env, argv) => {
     output: {
       path: __dirname,
       publicPath: '/',
-      filename: isDocs ? './docs/cm.js' : './dist/cm.js',
+      filename: isDocs ? `./docs/cm-v${version}.min.js` : `./dist/cm-v${version}.min.js`,
     },
     module: {
       rules: [
