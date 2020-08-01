@@ -124,7 +124,6 @@ function sender() {
   })
     .catch((err) => console.log(err))
     .finally(() => {
-      console.log(JSON.stringify(cash))
       cash.activities = []
     })
 }
@@ -137,6 +136,7 @@ function getElemData(scrollX, scrollY, elem) {
   const {left, top, width, height} = elem.getBoundingClientRect()
   return {
     selector: getCssSelector(elem),
+    elemTag: elem.nodeName,
     elemX: left + scrollX,
     elemY: top + scrollY,
     width,
@@ -160,7 +160,6 @@ async function start() {
       return getElemData(scrollX, scrollY, elem)
     }
 
-    const {selector, elemX, elemY, width, height} = getElemDataXY(target)
     const points = defineRectangle(clientX, clientY, scrollX, scrollY)
     const nearestElems = findNearestElems(points, scrollX, scrollY, target)
 
@@ -168,6 +167,7 @@ async function start() {
       return
     }
 
+    const targetElemData = getElemDataXY(target)
     const nearestElemsData = nearestElems.map((elem) => getElemDataXY(elem))
 
     const data = {
@@ -177,21 +177,16 @@ async function start() {
       orientation: screen.orientation.type,
       scroll_x: scrollX,
       scroll_y: scrollY,
-      elem_tag: target.nodeName,
-      elem_selector: selector,
       page_uri: location.href,
-      elem_x: elemX,
-      elem_y: elemY,
       timestamp: Date.now(),
-      elem_width: width,
-      elem_height: height,
       nearestElemsData,
+      targetElemData,
     }
     console.log(data)
     cash.activities.push(data)
   }))
 
-  // startSender()
+  startSender()
 }
 
 document.addEventListener('DOMContentLoaded', start)

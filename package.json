@@ -9,7 +9,7 @@
     "prod-GhP": "cross-env NODE_ENV=docs webpack --mode production"
   },
   "author": "Mikhail Gladkikh",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "fingerprintjs2": "^2.1.0"
   },
