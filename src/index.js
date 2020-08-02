@@ -5,7 +5,7 @@ const config = {
   showVisual: true,
   sendInterval: 10000,
   apiUrl: 'http://localhost:3000/api/activities/add',
-  apiSec: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
+  basicToken: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
   fingerprint: {fonts: {extendedJsFonts: true}},
   targetTags: [
     'BUTTON',
@@ -16,7 +16,7 @@ const config = {
 const cash = {
   fingerprint: null,
   activities: [],
-  apiSec: config.apiSec,
+  basicToken: config.basicToken,
 }
 
 function getFingerprint() {

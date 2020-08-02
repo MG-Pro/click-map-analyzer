@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --mode production --colors --progress",
     "start": "webpack-dev-server --mode development --hot --colors",
-    "prod-GhP": "cross-env NODE_ENV=docs webpack --mode production"
+    "prod-GhP": "cross-env NODE_ENV=docs webpack --mode production",
+    "postprod-GhP": "echo I run after the build script"
   },
   "author": "Mikhail Gladkikh",
   "license": "MIT",
