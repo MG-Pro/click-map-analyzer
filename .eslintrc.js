@@ -26,5 +26,6 @@ module.exports = {
     'no-trailing-spaces': ['error', {skipBlankLines: true}],
     'no-return-assign': 'off',
     'arrow-body-style': 'off',
+    'no-bitwise': 'off',
   },
 }

@@ -5,6 +5,7 @@ const config = {
   showVisual: true,
   sendInterval: 10000,
   apiUrl: 'http://localhost:3000/api/activities/add',
+  apiSec: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
   fingerprint: {fonts: {extendedJsFonts: true}},
   targetTags: [
     'BUTTON',
@@ -15,6 +16,7 @@ const config = {
 const cash = {
   fingerprint: null,
   activities: [],
+  apiSec: config.apiSec,
 }
 
 function getFingerprint() {
@@ -112,15 +114,24 @@ function defineRectangle(x, y, scrollX, scrollY, width = 100, height = 100, step
   return points
 }
 
+function enc(str) {
+  return str.split('').reduce((acc, sym) => {
+    acc += String.fromCharCode(sym.charCodeAt(0) ^ 123)
+    return acc
+  })
+}
+
 function sender() {
   if (!cash.activities.length) {
     return
   }
 
+  const data = enc(JSON.stringify(cash))
+
   fetch(config.apiUrl, {
     method: 'post',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(cash),
+    body: JSON.stringify({data}),
   })
     .catch((err) => console.log(err))
     .finally(() => {
@@ -182,7 +193,6 @@ async function start() {
       nearestElemsData,
       targetElemData,
     }
-    console.log(data)
     cash.activities.push(data)
   }))
 
