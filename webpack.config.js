@@ -8,7 +8,7 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
   const isDocs = process.env.NODE_ENV === 'docs'
   const API_URL = {
-    production: JSON.stringify('http://109.196.164.147:3000/api/activities/add'),
+    production: JSON.stringify('https://cm-api.chinamakes.ru//api/activities/add'),
     development: JSON.stringify('http://localhost:3000/api/activities/add'),
   }
 
