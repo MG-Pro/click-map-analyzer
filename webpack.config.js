@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -6,6 +7,10 @@ const {version} = require('./package.json')
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
   const isDocs = process.env.NODE_ENV === 'docs'
+  const API_URL = {
+    production: JSON.stringify('http://109.196.164.147:3000/api/activities/add'),
+    development: JSON.stringify('http://localhost:3000/api/activities/add'),
+  }
 
   return {
     entry: [
@@ -50,6 +55,9 @@ module.exports = (env, argv) => {
         inject: true,
       }) : () => {
       },
+      new webpack.DefinePlugin({
+        API_URL: API_URL[argv.mode],
+      }),
     ],
   }
 }

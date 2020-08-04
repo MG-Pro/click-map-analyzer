@@ -4,7 +4,7 @@ const config = {
   interceptClickHandlers: false,
   showVisual: true,
   sendInterval: 10000,
-  apiUrl: 'http://localhost:3000/api/activities/add',
+  apiUrl: API_URL,
   basicToken: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
   fingerprint: {fonts: {extendedJsFonts: true}},
   targetTags: [
