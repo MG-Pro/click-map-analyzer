@@ -2,7 +2,7 @@ import Fingerprint2 from 'fingerprintjs2'
 
 const config = {
   interceptClickHandlers: false,
-  showVisual: true,
+  showVisual: !IS_PROD,
   sendInterval: 10000,
   apiUrl: API_URL,
   basicToken: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
