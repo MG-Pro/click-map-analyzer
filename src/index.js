@@ -134,9 +134,7 @@ function sender() {
     body: JSON.stringify({data}),
   })
     .catch((err) => console.log(err))
-    .finally(() => {
-      cash.activities = []
-    })
+  cash.activities = []
 }
 
 function startSender() {
