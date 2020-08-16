@@ -8,8 +8,10 @@ const config = {
   basicToken: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
   fingerprint: {fonts: {extendedJsFonts: true}},
   targetTags: [
-    'BUTTON',
-    'A',
+    'button',
+    'a',
+    'input',
+    'select',
   ],
 }
 
@@ -76,7 +78,7 @@ function findNearestElems(points, scrollX, scrollY, targetElem) {
         .forEach((elem) => {
           if (
             elem !== targetElem
-            && config.targetTags.includes(elem.nodeName)
+            && config.targetTags.includes(elem.nodeName.toLowerCase())
             && !acc.includes(elem)
           ) {
             acc.push(elem)
@@ -145,7 +147,7 @@ function getElemData(scrollX, scrollY, elem) {
   const {left, top, width, height} = elem.getBoundingClientRect()
   return {
     selector: getCssSelector(elem),
-    elemTag: elem.nodeName,
+    elemTag: elem.nodeName.toLowerCase(),
     elemX: left + scrollX,
     elemY: top + scrollY,
     width,
