@@ -29,5 +29,6 @@ module.exports = {
     'no-return-assign': 'off',
     'arrow-body-style': 'off',
     'no-bitwise': 'off',
+    'no-plusplus': 'off',
   },
 }

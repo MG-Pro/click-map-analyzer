@@ -3,6 +3,12 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
 const config = {
   apiUrl: API_URL,
   basicToken: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
+  sendInterval: 10000,
+}
+const storage = {
+  visitorId: null,
+  basicToken: config.basicToken,
+  items: [],
 }
 
 async function getFingerprint() {
@@ -22,19 +28,8 @@ function enc(str) {
   })
 }
 
-function locationPuller(cb) {
-  let oldHref = window.location.href
-  setInterval(() => {
-    if (oldHref !== window.location.href) {
-      oldHref = window.location.href
-      cb(window.location.href)
-    }
-  }, 100)
-}
-
-function takeD(visitorId, href) {
+function takeD(href) {
   return [
-    visitorId,
     window.screen.width,
     window.screen.orientation.type,
     Date.now(),
@@ -46,26 +41,57 @@ function takeD(visitorId, href) {
 }
 
 function send(data) {
-  const d = enc(JSON.stringify(data))
-  console.log(d)
-  return fetch(config.apiUrl, {
-    method: 'post',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({d}),
-  })
+  console.dir(data)
+  const strData = enc(JSON.stringify(data))
+  // return fetch(config.apiUrl, {
+  //   method: 'post',
+  //   headers: {'Content-Type': 'application/json'},
+  //   body: JSON.stringify({d}),
+  // })
+  storage.items = []
+}
+
+function startCycle(cb) {
+  const pullInterval = 100
+  let oldHref = window.location.href
+  let counter = 0
+
+  return setInterval(() => {
+    if (oldHref !== window.location.href) {
+      oldHref = window.location.href
+      cb(window.location.href)
+    }
+    if (counter++ >= config.sendInterval / pullInterval) {
+      if (storage.items.length) {
+        send(storage)
+      }
+
+      counter = 0
+    }
+  }, pullInterval)
 }
 
 async function start() {
-  const visitorId = await getFingerprint()
+  try {
+    storage.visitorId = await getFingerprint()
 
-  if (!visitorId) {
-    return
+    if (storage.visitorId) {
+      const intervalID = startCycle((href) => {
+        storage.items.push(takeD(href))
+      })
+
+      window.addEventListener('beforeunload', () => {
+        if (storage.items.length) {
+          send(storage)
+        }
+
+        clearInterval(intervalID)
+      })
+
+      storage.items.push(takeD(window.location.href))
+    }
+  } catch (e) { // eslint-disable-next-line no-empty
   }
-
-  locationPuller((href) => {
-    send(takeD(visitorId, href))
-  })
-  send(takeD(visitorId, window.location.href))
 }
 
 start()

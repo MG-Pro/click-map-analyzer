@@ -51,7 +51,6 @@ module.exports = (env, argv) => {
       },
       !isProduction ? new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: 'testPage/index.html',
         inject: true,
       }) : () => {
       },
