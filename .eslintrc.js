@@ -10,6 +10,7 @@ module.exports = {
     SharedArrayBuffer: 'readonly',
     API_URL: 'readonly',
     IS_PROD: 'readonly',
+    B_TOKEN: 'readonly',
   },
   parserOptions: {
     ecmaVersion: 2018,

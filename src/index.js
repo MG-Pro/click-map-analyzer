@@ -2,12 +2,12 @@ import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 const config = {
   apiUrl: API_URL,
-  basicToken: 'CE68C8072A0A71863350CFB1BED8349CAD41672E',
+  basicToken: B_TOKEN,
   sendInterval: 10000,
 }
 const storage = {
   visitorId: null,
-  basicToken: config.basicToken,
+  token: config.basicToken,
   items: [],
 }
 
@@ -41,13 +41,8 @@ function takeD(href) {
 }
 
 function send(data) {
-  console.dir(data)
   const strData = enc(JSON.stringify(data))
-  // return fetch(config.apiUrl, {
-  //   method: 'post',
-  //   headers: {'Content-Type': 'application/json'},
-  //   body: JSON.stringify({d}),
-  // })
+  window.navigator.sendBeacon(config.apiUrl, strData)
   storage.items = []
 }
 

@@ -7,9 +7,10 @@ const {version} = require('./package.json')
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production'
   const isDocs = process.env.NODE_ENV === 'docs'
+  const basicToken = JSON.stringify('CE68C8072A0A71863350CFB1BED8349CAD41672E')
   const apiList = {
-    production: JSON.stringify('https://cm-api.chinamakes.ru/api/activities/add'),
-    development: JSON.stringify('http://localhost:3000/api/activities/add'),
+    production: JSON.stringify('https://cm-api.chinamakes.ru/api/transitions/add'),
+    development: JSON.stringify('http://localhost:3000/api/transitions/add'),
   }
 
   return {
@@ -57,6 +58,7 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         API_URL: apiList[argv.mode],
         IS_PROD: isProduction,
+        B_TOKEN: basicToken,
       }),
     ],
   }
