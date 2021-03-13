@@ -31,13 +31,13 @@ function enc(str) {
 function takeD(href) {
   return [
     window.screen.width,
-    window.screen.orientation.type,
+    window.screen.orientation?.type,
     Date.now(),
     window.navigator.language,
     window.navigator.platform,
     window.navigator.userAgent,
     href,
-    window?.navigator.hardwareConcurrency,
+    window.navigator.hardwareConcurrency,
   ]
 }
 
@@ -86,7 +86,8 @@ async function start() {
 
       storage.items.push(takeD(window.location.href))
     }
-  } catch (e) { // eslint-disable-next-line no-empty
+  } catch (e) {
+    console.log(e)
   }
 }
 
