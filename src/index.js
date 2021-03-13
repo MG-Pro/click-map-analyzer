@@ -37,7 +37,7 @@ function takeD(href) {
     window.navigator.platform,
     window.navigator.userAgent,
     href,
-    window.navigator.hardwareConcurrency,
+    window?.navigator.hardwareConcurrency,
   ]
 }
 
