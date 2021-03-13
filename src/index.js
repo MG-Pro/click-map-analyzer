@@ -9,6 +9,7 @@ const storage = {
   visitorId: null,
   token: config.basicToken,
   items: [],
+  dev: !IS_PROD,
 }
 
 async function getFingerprint() {
