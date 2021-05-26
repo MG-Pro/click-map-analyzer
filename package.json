@@ -7,7 +7,7 @@
     "build": "webpack --mode production --colors --progress",
     "dev-build": "webpack --mode development --colors --progress -w",
     "start": "webpack-dev-server --mode development --hot --colors",
-    "prod-ghp": "cross-env NODE_ENV=docs webpack --mode production",
+    "prod-ghp": "cross-env NODE_ENV=docs webpack --mode production"
   },
   "author": "Mikhail Gladkikh",
   "license": "MIT",
